@@ -1,3 +1,4 @@
+// src/pages/Dashboard.jsx
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { db } from "../firebase";
@@ -20,18 +21,6 @@ function Dashboard() {
     startDate: "",
     endDate: ""
   });
-
-  const placeholderMap = {
-    brandName: "e.g. McQuigam Wines",
-    objective: "e.g. Drive retail trial during summer",
-    targetAudience: "e.g. 25–45yo wine drinkers, regional Australia",
-    offer: "e.g. Buy 2 bottles, scan QR to win",
-    creativeHeadline: "e.g. Sip & Win a Trip on The Ghan",
-    entryMechanic: "e.g. Scan QR, enter online, instant win",
-    prizeDetails: "e.g. Luxury rail trip + daily wine prizes",
-    mediaBudget: "e.g. $150,000",
-    mediaChannels: "e.g. In-store, Facebook, Instagram, Trade Press"
-  };
 
   const [evaluation, setEvaluation] = useState("");
   const evalRef = useRef(null);
@@ -68,100 +57,45 @@ function Dashboard() {
   };
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", padding: "2rem" }}>
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          maxWidth: "600px",
-          margin: "3rem auto",
-          padding: "2rem",
-          backgroundColor: "#fff",
-          borderRadius: "12px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "1.5rem"
-        }}
-      >
-        <h2 style={{ textAlign: "center", fontSize: "1.8rem", marginBottom: "0.5rem" }}>📋 Submit Your Campaign</h2>
-        <p style={{ textAlign: "center", color: "#666", fontSize: "0.95rem" }}>
-          Please fill out the campaign details below for evaluation.
-        </p>
-
-        {["brandName", "objective", "targetAudience", "offer", "creativeHeadline", "entryMechanic", "prizeDetails", "mediaBudget", "mediaChannels"].map(name => (
-          <div key={name} style={{ display: "flex", flexDirection: "column" }}>
-            <label style={{ marginBottom: "0.25rem", fontWeight: "bold" }}>
-              {name.replace(/([A-Z])/g, " $1").replace(/^./, c => c.toUpperCase())}
-            </label>
-            <input
-              name={name}
-              placeholder={placeholderMap[name] || ""}
-              onChange={handleChange}
-              style={{
-                padding: "0.75rem",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-                fontSize: "1rem"
-              }}
-            />
-          </div>
-        ))}
-
-        {["startDate", "endDate"].map(dateField => (
-          <div key={dateField} style={{ display: "flex", flexDirection: "column" }}>
-            <label style={{ marginBottom: "0.25rem", fontWeight: "bold" }}>{dateField === "startDate" ? "Campaign Start Date" : "Campaign End Date"}</label>
-            <input
-              name={dateField}
-              type="date"
-              onChange={handleChange}
-              style={{
-                padding: "0.75rem",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-                fontSize: "1rem"
-              }}
-            />
-          </div>
-        ))}
-
-        <button
-          type="submit"
-          style={{
-            marginTop: "1rem",
-            padding: "0.9rem 1.5rem",
-            fontSize: "1rem",
-            borderRadius: "8px",
-            background: "#4CAF50",
-            color: "#fff",
-            border: "none",
-            cursor: "pointer"
-          }}
-        >
-          🚀 Evaluate Campaign
+    <div style={{ maxWidth: "700px", margin: "2rem auto", fontFamily: "Arial, sans-serif" }}>
+      <h2 style={{ textAlign: "center" }}>Submit a Campaign</h2>
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <input name="brandName" placeholder="Brand name (e.g. McQuigam Wines)" onChange={handleChange} required />
+        <input name="objective" placeholder="Objective (e.g. Drive short-term sales)" onChange={handleChange} required />
+        <input name="targetAudience" placeholder="Target audience (e.g. Adults 25–45, premium wine buyers)" onChange={handleChange} required />
+        <input name="offer" placeholder="Offer (e.g. Buy any bottle to enter)" onChange={handleChange} required />
+        <input name="creativeHeadline" placeholder="Creative headline (e.g. Sip & Win a Trip on The Ghan)" onChange={handleChange} required />
+        <input name="entryMechanic" placeholder="Entry mechanic (e.g. Scan QR on bottle, upload receipt)" onChange={handleChange} required />
+        <input name="prizeDetails" placeholder="Prize/reward details (e.g. 5x trips, minor prizes weekly)" onChange={handleChange} required />
+        <input name="mediaBudget" placeholder="Media budget (e.g. $250,000)" onChange={handleChange} required />
+        <input name="mediaChannels" placeholder="Media channels (e.g. Instagram, in-store POS, email)" onChange={handleChange} required />
+        <input name="startDate" type="date" onChange={handleChange} required />
+        <input name="endDate" type="date" onChange={handleChange} required />
+        <button type="submit" style={{ padding: "1rem", background: "#1976D2", color: "white", border: "none", borderRadius: "6px" }}>
+          Evaluate Campaign
         </button>
       </form>
 
       {evaluation && (
-        <div style={{ maxWidth: "800px", margin: "3rem auto" }}>
+        <div style={{ marginTop: "2rem" }}>
           <div
             ref={evalRef}
             style={{
               whiteSpace: "pre-wrap",
               backgroundColor: "#f9f9f9",
-              color: "#333",
-              padding: "2rem",
+              padding: "1.5rem",
               borderRadius: "10px",
-              border: "1px solid #ddd",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-              lineHeight: "1.6"
+              border: "1px solid #ccc",
+              lineHeight: 1.6,
+              color: "#333"
             }}
           >
-            <h3 style={{ marginBottom: "1rem", fontWeight: "600" }}>Campaign Evaluation</h3>
-            <p>{evaluation.replace(/\*\*(.*?)\*\*/g, '$1')}</p>
+            <h3 style={{ fontWeight: "600", marginBottom: "1rem" }}>📋 GPT Evaluation</h3>
+            <p>{evaluation}</p>
           </div>
 
           <button
-            style={{ marginTop: "1rem", padding: "0.75rem 1.5rem", borderRadius: "8px", background: "#1976D2", color: "#fff", border: "none" }}
+            style={{ marginTop: "1rem", padding: "0.75rem 1.25rem" }}
             onClick={async () => {
               const input = evalRef.current;
               const canvas = await html2canvas(input);
@@ -170,29 +104,19 @@ function Dashboard() {
               const pdf = new jsPDF("p", "mm", "a4");
               const pageWidth = pdf.internal.pageSize.getWidth();
               const pageHeight = pdf.internal.pageSize.getHeight();
-
-              const imgWidth = pageWidth;
-              const imgHeight = (canvas.height * imgWidth) / canvas.width;
+              const imgProps = pdf.getImageProperties(imgData);
+              const imgRatio = imgProps.width / imgProps.height;
+              const pdfWidth = pageWidth;
+              const pdfHeight = pageWidth / imgRatio;
 
               let position = 0;
+              pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
 
-              pdf.setFontSize(12);
-              pdf.text(`Campaign Evaluation — ${formData.brandName}`, 10, 20);
-              pdf.text(`Objective: ${formData.objective}`, 10, 28);
-              pdf.text(`Target Audience: ${formData.targetAudience}`, 10, 36);
-              pdf.text(`Created: ${new Date().toLocaleDateString()}`, 10, 44);
-              position = 50;
-
-              const imgChunkHeight = pageHeight - position;
-              let remainingHeight = imgHeight;
-
-              while (remainingHeight > 0) {
-                pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-                remainingHeight -= imgChunkHeight;
-                if (remainingHeight > 0) {
-                  pdf.addPage();
-                  position = 10;
-                }
+              // Add extra pages if content height exceeds A4
+              while (pdfHeight + position > pageHeight) {
+                position -= pageHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, "PNG", 0, position, pdfWidth, pdfHeight);
               }
 
               pdf.save(`Bamboo_Evaluation_${formData.brandName}.pdf`);
