@@ -41,7 +41,7 @@ Use prose and bullet points, feel free to waffle, and speak like you’ve seen t
   const response = await axios.post(
     "https://api.openai.com/v1/chat/completions",
     {
-      model: "gpt-4",
+      model: "gpt-4-turbo",
       messages: [
         { role: "system", content: "You are a promotional campaign strategist." },
         { role: "user", content: prompt }
