@@ -1,7 +1,7 @@
 // src/gptEvaluator.js
 import axios from "axios";
 
-const OPENAI_API_KEY = "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"; // Secure this key in env in production
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 export const evaluateCampaign = async (data) => {
   const prompt = `
