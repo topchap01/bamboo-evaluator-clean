@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { auth } from "../firebase"; // ✅ use your initialised Firebase app
 import { useNavigate } from "react-router-dom";
 
 function LoginRegister() {
@@ -8,7 +9,6 @@ function LoginRegister() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const auth = getAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
