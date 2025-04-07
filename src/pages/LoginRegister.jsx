@@ -58,7 +58,7 @@ function LoginRegister() {
           gap: "1rem"
         }}
       >
-        <h2 style={{ textAlign: "center" }}>{isRegistering ? "Register" : "Login"}</h2>
+      <h2 style={{ textAlign: "center" }}>{isRegistering ? "Register an Account" : "Sign in to Bamboo"}</h2>
 
         <input
           type="email"
