@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { auth } from "../firebase"; // ✅ use your initialised Firebase app
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 function LoginRegister() {
@@ -9,6 +13,7 @@ function LoginRegister() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  const auth = getAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -36,14 +41,17 @@ function LoginRegister() {
   };
 
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100vh",
-      background: "#f4f4f4",
-      fontFamily: "Arial, sans-serif"
-    }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        background: "#e3f2fd",
+        fontFamily: "Arial, sans-serif",
+        padding: "1rem",
+      }}
+    >
       <form
         onSubmit={handleSubmit}
         style={{
@@ -51,38 +59,47 @@ function LoginRegister() {
           maxWidth: "400px",
           background: "#fff",
           padding: "2rem",
-          borderRadius: "10px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          borderRadius: "12px",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
           display: "flex",
           flexDirection: "column",
-          gap: "1rem"
+          gap: "1.25rem",
         }}
       >
-      <h2 style={{ textAlign: "center" }}>{isRegistering ? "Register an Account" : "Sign in to Bamboo"}</h2>
+        <h2 style={{ textAlign: "center", color: "#1976D2" }}>
+          {isRegistering ? "Create Your Account" : "Welcome Back"}
+        </h2>
 
         <input
           type="email"
-          placeholder="Email"
+          placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={{ padding: "0.75rem", borderRadius: "6px", border: "1px solid #ccc" }}
+          style={{ padding: "0.9rem", borderRadius: "8px", border: "1px solid #ccc" }}
           required
         />
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{ padding: "0.75rem", borderRadius: "6px", border: "1px solid #ccc" }}
+          style={{ padding: "0.9rem", borderRadius: "8px", border: "1px solid #ccc" }}
           required
         />
 
         <button
           type="submit"
-          style={{ background: "#1976D2", color: "#fff", padding: "0.75rem", border: "none", borderRadius: "6px" }}
+          style={{
+            background: "#1976D2",
+            color: "#fff",
+            padding: "0.9rem",
+            border: "none",
+            borderRadius: "8px",
+            fontSize: "1rem",
+          }}
         >
-          {isRegistering ? "Create Account" : "Login"}
+          {isRegistering ? "Register" : "Login"}
         </button>
 
         <p style={{ fontSize: "0.9rem", textAlign: "center", color: "#555" }}>{message}</p>
@@ -91,13 +108,16 @@ function LoginRegister() {
           onClick={() => setIsRegistering(!isRegistering)}
           style={{
             textAlign: "center",
-            marginTop: "1rem",
+            marginTop: "0.5rem",
             fontSize: "0.9rem",
             cursor: "pointer",
-            color: "#1976D2"
+            color: "#1976D2",
+            textDecoration: "underline",
           }}
         >
-          {isRegistering ? "Already have an account? Login" : "Don't have an account? Register"}
+          {isRegistering
+            ? "Already have an account? Login"
+            : "Don't have an account? Register"}
         </p>
       </form>
     </div>
