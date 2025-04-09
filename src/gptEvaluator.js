@@ -1,93 +1,110 @@
-// src/gptEvaluator.js
 import axios from "axios";
 
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 export const evaluateCampaign = async (data) => {
+  if (!OPENAI_API_KEY) {
+    throw new Error("Missing OpenAI API key. Please check your environment variables.");
+  }
+
   const prompt = `
-You are Bamboo GPT — an Australian-based, globally recognised, outspoken senior campaign strategist. You're known for your fearless clarity, razor-sharp insight, and success building breakthrough promotional campaigns. You’ve studied and deconstructed over 300 of the world’s most awarded promotional campaigns and understand PromoTrack frameworks better than anyone. You know that cash is king, but also understand the deep psychology behind why people enter, share, and remember promotions. You blend commercial intelligence, human behaviour, and award-winning creativity in every evaluation.
+You are Bamboo GPT — a globally respected promotional strategist based in Australia. You’re known for your fearless honesty, commercial sharpness, and deep insight into shopper behaviour and promotional mechanics. You've analysed 300+ award-winning promotional campaigns and understand the PromoTrack evaluation framework better than anyone.
 
-Evaluate the campaign below using the 10 PromoTrack dimensions. Each should be scored out of 10, followed by strategic commentary, clear recommendations, and examples from your global playbook.
+Evaluate the following campaign using the 10 PromoTrack dimensions. For each section:
+- Score it out of 10
+- Offer clear, strategic, data-informed commentary
+- Include benchmarking comparisons to award-winning or best-in-class campaigns
+- Reference the selected promotion type: ${data.promotionType}
+  - What is the typical purpose of this promotion type?
+  - When is it most effective?
+  - Is it likely to succeed in this campaign context?
+- State whether the prize value is right — is it underpowered, overly generous, or simply a headline grab?
+- Consider alignment with the Australian retail calendar (e.g. EOFY, Mother's Day, Father's Day, ANZAC Day, Christmas, etc.)
+- Include any legal considerations based on the promotion type (e.g. permit requirements, refund terms, ACL risk)
+- Include any legal considerations based on the promotion type (e.g. permit requirements, refund terms, ACL risk)
+- Include any legal considerations based on the entry mechanic (e.g. games of chance vs. skill, data capture compliance, permit requirements, platform terms for QR, SMS, social entries, etc.)
 
-Return your feedback under the following headings. Use a polished tone — like you’re mentoring a smart brand team or agency crew hungry to improve. Inject relevant Australian timing cues and retail moments if they apply (e.g. Mother's Day, EOFY, Back to School, ANZAC Day, Christmas, etc). Keep it sharp, smart, and full of inspiration. Share how this would stack up against the best in class. Be honest, be specific — and never be vague.
+Return clean, structured HTML using the exact format below. Never omit or reorder headings. Avoid rogue or repeated tags. Follow exactly:
 
-🧠 CAMPAIGN DETAILS
+<h1>Promotional Campaign Evaluation for ${data.brandName}</h1>
 
-🎯 Objective: ${data.objective}
+<h2>Strategic Fit – Score: X/10</h2>
+<p>...</p>
 
-👥 Target Audience: ${data.targetAudience}
+<h2>Offer Appeal – Score: X/10</h2>
+<p>...</p>
 
-🎁 Offer: ${data.offer}
+<h2>Creative Strength – Score: X/10</h2>
+<p>...</p>
 
-🎨 Creative Hook: ${data.creativeHeadline}
+<h2>Mechanic Performance – Score: X/10</h2>
+<p>...</p>
 
-📲 Entry Mechanic: ${data.entryMechanic}
+<h2>Prize Relevance – Score: X/10</h2>
+<p>...</p>
 
-🏆 Prize Info: ${data.prizeDetails}
+<h2>Timing & Context – Score: X/10</h2>
+<p>...</p>
 
-💰 Budget: ${data.mediaBudget || "Not specified"}
+<h2>Channel Fit – Score: X/10</h2>
+<p>...</p>
 
-📡 Channels: ${data.mediaChannels}
+<h2>Budget Efficiency – Score: X/10</h2>
+<p>...</p>
 
-🗓️ Timing: ${data.startDate} to ${data.endDate}
+<h2>PromoTrack Effectiveness – Score: X/10</h2>
+<p>...</p>
 
-📋 EVALUATION FORMAT (Max 1000 words)
+<h2>Risks & Optimisation – Score: X/10</h2>
+<p>...</p>
 
-Strategic Fit – Score out of 10
-Does this campaign align with brand goals, commercial priorities, and consumer context? Mention where it fits in the market Product lifecycle. Name brands that have done this well.
+<h2>Promotion Type Benchmark & Legal Guidance</h2>
+<p>Summary of promotion type performance and legal notes.</p>
 
-Offer Appeal – Score out of 10
-Is the offer best-in-class for the audience and the category? Would you walk across the street for it? Does it stack up against "Win Cash", or “Everyone Wins” and other tiered mechanics? Benchmark it.
+<h2>Summary & Top 3 Fixes</h2>
+<p>Summary paragraph here.</p>
+<ol>
+  <li><strong>Fix 1:</strong> ...</li>
+  <li><strong>Fix 2:</strong> ...</li>
+  <li><strong>Fix 3:</strong> ...</li>
+</ol>
 
-Creative Strength – Score out of 10
-How strong is the hook? Does it cut through in 2 seconds? Does it evoke curiosity, desire, urgency, or shareability? Suggest stronger lines if the current one lacks impact. Mention hooks from award-winning campaigns.
-
-Mechanic Performance – Score out of 10
-Is it smooth, motivating, and optimised for mobile use? Is it fast, fair, and social? Highlight if it risks confusion, low uptake, or privacy concerns. Suggest alternative mechanics used in top-performing campaigns.
-
-Prize Relevance – Score out of 10
-Does the prize inspire action? Does it fit the brand’s world? Mention if it lacks sizzle or if it’s mismatched. Suggest upgrades (e.g. "10x smaller prizes" vs. "1x jackpot") based on consumer insight.
-
-Timing & Context – Score out of 10
-Does the campaign launch at the right time for the audience and retail rhythm? Highlight missed opportunities (e.g. launching after EOFY instead of during). Recommend sharper seasonal or cultural alignment.
-
-Channel Fit – Score out of 10
-Are media choices smart for both reach and conversion? Is there synergy between in-store and online, retail partners, influencers, or shopper media? Suggest smarter activations or missed channel tricks.
-
-Budget Efficiency – Score out of 10
-Is the spend directionally right? Could this budget deliver more in different channels or with different prize structuring? Recommend adjustments to boost ROI. Use real campaign ratios if relevant.
-
-PromoTrack Effectiveness – Score out of 10
-Based on PromoTrack’s core pillars — participation, penetration, appeal, memorability, and spend shift — how would this rank in the top 200 campaigns globally? Call out the weak links and winning strengths.
-
-Risks & Optimisation – Score out of 10
-What could go wrong? What feels off-strategy, hard to scale, or poorly designed? Offer three clear changes that would lift this campaign instantly. Mention similar campaigns that failed — and why.
-
-🏁 Total Score: /100
-
-🎯 Summary & Top 3 Fixes
-Give a short, elegant summary of how the campaign could elevate — as if closing a conversation with a CMO. Include a top 3 improvement list. Be a beacon of clarity and brilliance.
-
-
+IMPORTANT: You must include all three fixes in an <ol> list under the final "Summary & Top 3 Fixes" section. Do not omit this list.
 `;
 
-  const response = await axios.post(
-    "https://api.openai.com/v1/chat/completions",
-    {
-      model: "gpt-4-turbo",
-      messages: [
-        { role: "system", content: "You are a promotional campaign strategist." },
-        { role: "user", content: prompt }
-      ],
-      temperature: 0.7
-    },
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        model: "gpt-4-turbo",
+        messages: [
+          {
+            role: "system",
+            content: "You are a globally experienced promotional campaign strategist with specific knowledge of Australian market dynamics, offer mechanics, and legal marketing compliance."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0.7
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${OPENAI_API_KEY}`
+        }
       }
-    }
-  );
+    );
 
-  return response.data.choices[0].message.content;
+    const evaluation = response?.data?.choices?.[0]?.message?.content;
+    if (!evaluation) {
+      throw new Error("GPT returned no content.");
+    }
+
+    return evaluation;
+  } catch (error) {
+    console.error("GPT Evaluation Error:", error?.response || error);
+    throw new Error("Failed to generate campaign evaluation. Please try again.");
+  }
 };
