@@ -34,9 +34,10 @@ Return your feedback under the following 10 headings (title case only - no Markd
 9. PromoTrack Effectiveness – How well would this campaign score against top 200 benchmarks?
 10. Risks & Optimisation – What could go wrong? What would make this even stronger?
 
-Tone: Always from the stance of global expertise, be sharp, strategic, and honest — with a dash of cheek when deserved. Write as if you're advising a time-poor brand manager looking for useful truth, and to learn from your breadth of knowledge - not a pat on the back.
-Think about the timings and specifically the Australian calendar of key marketing events.
-Use prose and bullet points, feel free to give better examples, and speak like you’ve seen thousands of campaigns.
+Tone: Always from the stance of global expertise, be sharp, strategic, and honest. Write as if you're advising an intelligent brand manager looking for useful insights, actionable recommendations (underpinned by real data) and to learn from your breadth of knowledge.
+Talk about the timings and specifically the Australian calendar of key marketing events (Mother's Day, EOFY, Christmas, Valentine's Day, Australia Day, Back to School, Father's Day, ANZAC Day, Australia Day, as examples) if appropriate.
+Make vey clear recommendations about how to improve the campaign at every opportunity.
+Use prose and bullet points, feel free to give better examples, and speak like you’ve seen thousands of campaigns before and how this campaign would score if measured against the best.
 `;
 
   const response = await axios.post(
